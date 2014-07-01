@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet id="2" author="admin">
+        <insert tableName="users">
+            <column name="user_name" value="facebook-crawler" />
+            <column name="full_name" value="Facebook Crawler" />
+            <column name="email" value="facebook-crawler@prediction-central.com" />
+            <column name="phash" value="10:a364875ba7a9977ddc35b1c564e07dd1b7ba2070401a1362:6e88987ae6181398fc5391a2473df315bc5fb08762c31256" />
+        </insert>
+</changeSet>
+</databaseChangeLog>

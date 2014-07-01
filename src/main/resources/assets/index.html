@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="keywords" content="prediction-central, prediction-central.com, prediction database, predictions, bad predictions, famouse predictions, comment, create prediction, predict the future, on the record, for the record, let me predict" />
+<meta name="author" content="Nirav Thaker">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+<meta name="description" content="Prediction Central is the database of past, present and future predictions on the internet.">
+<title>Predictions Central - The Prediction Database</title>
+<link rel="stylesheet" href="css/mp.css" />
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+      <script src="../../assets/js/html5shiv.js"></script>
+      <script src="../../assets/js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div id="wrap">
+        <div class="navbar navbar-fixed-top navbar-active navbar-inverse">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">Prediction Central</a>
+                </div>
+                <div class="collapse navbar-collapse ">
+
+                    <ul class="nav navbar-nav ">
+                        <li class="active"><a href="#new">New</a></li>
+                        <li ><a href="#analytics">Analytics</a></li>
+                        <!--<li><a href="#top">Top</a></li>-->
+                    </ul>
+                    <div class="navbar-form navbar-right" style="display: none" id="signin-area">
+                        <a data-toggle="modal" href="#signup" class="btn btn-danger">Sign up</a>
+                        <a data-toggle="modal" class="btn" href="#login" style="color: white; text-decoration: underline;">Sign In</a>
+                    </div>
+                    <p class="navbar-text pull-right" style="display: none" id="signedas-area">
+                        <a href="#" class="navbar-link">$USER</a>
+                    </p>
+                    <div class="navbar-form navbar-left">
+                        <a data-toggle="modal" href="#makePred" class="btn-primary btn">Predict!</a>
+                    </div>
+                    <div class="col-sm-3 col-md-3 pull-right">
+                        <form class="navbar-form" >
+                            <div class="input-group">
+                                <input type="text" class="form-control" style="background-color: white" placeholder="Search" name="srch-term" id="tsearch">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default" onclick="UI.search();return false;">
+                                        <i class="glyphicon glyphicon-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /.nav-collapse -->
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /.navbar -->
+        <div class="container">
+            <div class="">
+                <div class="" id='page-body'>
+                    <div id="messages"></div>
+                    <div class="">
+                        <div class="">
+                            <h4 class="" id="mainpage-title">New Predictions</h4>
+                            <div class="pull-right">
+                                <a href="images/loader.gif"></a>
+                            </div>
+                        </div>
+                        <div class="" id="predictions-list">
+                            Loading, Please wait... <img src="images/loader.gif"  >
+                        </div>
+                        <ul class="pager" id='pager'>
+                            <!-- paging area -->
+                        </ul>
+                    </div>
+                    <!--/row-->
+                </div>
+
+            </div>
+            <!--/row-->
+
+            <!-- /.modal-dialog-prediction -->
+            <div class="modal fade" id="makePred">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">What do you want to predict?</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="form">
+                                <span>Use following format</span>
+                                <blockquote>
+                                    <div class="well well-sm">&#x275d; By/In <b>YEAR</b>, Prediction text &#x275e;</div>
+                                    <small class="text-right">
+                                        Author, Date, Tag1, Tag2 ...
+                                    </small>
+                                </blockquote>
+                                <div class="form-group ">
+                                    <div class="well well-sm">&#x275d;<textarea rows="10" cols="80" id="prediction-text" class="form-control" placeholder="Enter your prediction..."></textarea>&#x275e;
+
+                                    </div>
+                                    <div class="text-right">
+                                        <small class="text-right" style="text-align: right">
+                                            --
+                                            <input id="prediction-originalAuthor" class="prediction-input" type="text" placeholder="Author">
+                                            <input id="prediction-time" class="prediction-input" type="text" placeholder="Date">
+                                            <input id="prediction-tags" class="prediction-input" type="text" placeholder="Tags">
+                                        </small>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <span id="loader-createPrediction" style="display: none; ">
+                             Creating Prediction, Please wait... <img src="images/loader.gif"  >
+                            </span>
+                            <button type="button" class="btn btn-success" onclick='UI.createPrediction($("*[id^=\"prediction-\"]"));'>Record my prediction!</button>
+                        </div>
+                        <div id='cerrors'></div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+            </div>
+            <!-- /.modal-dialog-prediction -->
+            <!-- /.modal -->
+            <!-- Templates TODO: Use template tag -->
+            <!-- Prediction Template -->
+            <div style="display: none">
+                <div id="analytics-template">
+                    <div class="panel panel-default">
+                        <div class="row">
+                            <div class="panel-body">
+                                <div id="source-segmentation"  class="col-md-3" style="width: 25%">
+
+                                </div>
+                                <div id="trend-chart"  class="col-md-4" style="width: 75%">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="row">
+                            <div class="panel-body">
+                                <div>
+                                    <div style="font-weight: bolder;text-align: center">Top Countries Mentioned</div>
+                                    <div id="geo-mentions" class="col-md-8"></div>
+                                    <div id="geo-countries" class="col-md-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div id="top-topics" class="col-md-3">
+                                    <div style="font-weight: bolder;">Popular Prediction Topics</div>
+                                </div>
+
+                                <div id="top-sports-events" class="col-md-3">
+                                    <div style="font-weight: bolder;">Popular Sports Event Predictions</div>
+                                </div>
+
+                                <div id="top-industries" class="col-md-3">
+                                    <div style="font-weight: bolder;">Industries Mentions</div>
+                                </div>
+                                <div id="top-org" class="col-md-3">
+                                    <div style="font-weight: bolder;">Organizations Mentions</div>
+                                </div>
+                                <div id="top-company" class="col-md-3">
+                                    <div style="font-weight: bolder;">Companies Mentions</div>
+                                </div>
+                                <div id="top-person" class="col-md-3">
+                                    <div style="font-weight: bolder;">Person Mentions</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="global-info-message">
+                    <div class="alert alert-success alert-dismissable" id="info">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <div>$MSG</div>
+                    </div>
+                </div>
+                <div id="global-error-message">
+                    <div class="alert alert-danger alert-dismissable" id="error">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <div>$MSG</div>
+                    </div>
+                </div>
+                <div id="global-warn-message">
+                    <div class="alert alert-warning alert-dismissable" id="warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <div>$MSG</div>
+                    </div>
+                </div>
+                <div id="moderation-container">
+                    |
+                    <div class="btn approve" onclick="UI.approve(this, $PID);">&#10004;</div>
+                    |
+                    <div class="btn reject" onclick="UI.reject(this, $PID);">&#10008;</div>
+                </div>
+                <div id="moderation-container">
+                    |
+                    <div class="btn approve" onclick="UI.approve(this, $PID);">&#10004;</div>
+                    |
+                    <div class="btn reject" onclick="UI.reject(this, $PID);">&#10008;</div>
+                </div>
+                <div class="media" id="pred-list-item-container">
+                    <ul class="media-list list-group">
+                        <li class="list-group-item">
+                            <div class=" media-body">
+                                <div class="media-heading">
+                                    <a href="#p/$PID"> $TITLE </a> - <a class="submitter" href="#">$SUBMITTER</a> <span class="channel">via </span> $VIA
+                                    <div>
+                                        <div class="pull-right p-options">
+                                            <div class="btn">
+                                                <img src="images/icons/flag.png" height="16" width="16">
+                                            </div>
+                                            |
+                                            <div class="btn">
+                                                <img src="images/icons/share.png" height="16" width="16">
+                                            </div>
+                                            | <a class="btn" href="#p/$PID"><img src="images/icons/comment.png" height="16" width="16"> ($COMMENTCOUNT)</a> $MODERATION
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" ">
+                                    &#x275d; $TEXT &#x275e; $MAYBEMORE
+                                    <p></p>
+                                    <div>
+                                        <div class="pull-left">
+                                            <div class="btn likely pull-left" onclick="javascript:UI.voteUp($PID);return false;" id="up_$PID">&#9650; Likely ($UPS)</div>
+                                            <div class="btn unlikely pull-left" onclick="javascript:UI.voteDown($PID);return false;" id="down_$PID">&#9660; Unlikely ($DOWNS)</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="panel panel-default" id="pred-single-item-container">
+                    <div class="panel-heading">
+                        <a href="#p/$PID"> $TITLE </a> - <a class="submitter" href="#">$SUBMITTER</a> <span class="channel">via </span> $VIA
+                        <div>
+                            <div class="pull-right p-options">
+                                <div class="btn">
+                                    <img src="images/icons/flag.png" height="16" width="16">
+                                </div>
+                                |
+                                <div class="btn">
+                                    <img src="images/icons/share.png" height="16" width="16">
+                                </div>
+                                | <a class="btn" href="#p/$PID"><img src="images/icons/comment.png" height="16" width="16"> ($COMMENTCOUNT)</a> $MODERATION
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <blockquote>
+                            <p>$PDATE</p>
+                            <div>
+                                <pre id="pre_$PID">&#x275d; $TEXT &#x275e;</pre>
+                            </div>
+                            <small class="text-right"> <a href="#"> $AUTHOR </a> <cite title="Source Title"> predicted</cite> on $DATE
+                            </small>
+                        </blockquote>
+                        <div>
+                            <div class="pull-left">
+                                <div class="btn likely pull-left" onclick="javascript:UI.voteUp($PID)" id="up_$PID">&#9650; Likely ($UPS)</div>
+                                <div class="btn unlikely pull-left" onclick="javascript:UI.voteDown($PID)" id="down_$PID">&#9660; Unlikely ($DOWNS)</div>
+                            </div>
+                        </div>
+                        <div class="pull-right">$TAGS</div>
+                        <br>
+                        <hr>
+                        $COMMENTSCONTAINER
+                    </div>
+                </div>
+                <div id="comment-container">
+                    <ul class="media-list list-group" id="prediction_comments_$PID">
+                        <li class="media list-group" style="padding: 10px">
+                            <div class="media-body">
+                                <div class="media-heading">
+                                    <b>$AUTHOR</b> said:
+                                </div>
+                                <div>$COMMENT</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="comment-captcha">
+                    <div class="form-group form-inline">
+                        <label for="comment-captcha" id="captcha-label" data-value='$CAPTCHAID'>$CAPTCHAEXPR </label> 
+                        <input type="text" class="form-control" id="comment-captcha" placeholder="Prove you are human by answering a simple math question above">
+                    </div>                                        
+                </div>
+                
+                <div id="comments-container">
+                    <div>
+                        <h4 class="">Comments:</h4>
+                    </div>
+                    <div class="panel-body" id="comments-list-$PID">
+                        <div class="media" id="comment-container">
+                            $COMMENTAREA
+                        </div>
+                    </div>
+                    <hr>
+                    <div>Post a comment</div>
+                    <form class="form" style="width: 70%; padding: 5px">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="comment-author" placeholder="Name (Optional)" value="$CURRENTUSERNAME" disabled="$UDISABLED">
+                        </div>
+                        <div class="form-group">
+                            <textarea rows="4" cols="80" id="comment-comment" class="form-control" placeholder="Comment (Required)"></textarea>
+                        </div>
+                        $CAPTCHA
+                        <button type="button" class="btn btn-success"
+                            onclick="UI.createComment($PID, $('#captcha-label').attr('data-value'),  $('#comment-captcha').val(), $('#comment-author').val(), $('#comment-comment').val());">
+                            Post comment</button>
+                    </form>
+                </div>
+            </div>
+            <!-- Signin template -->
+            <div class="modal fade" id="signup">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Sign up</h4>
+                            <p>
+                                By creating your Prediction Central account you agree to our <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>.
+                            </p>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="user-name" placeholder="Display Name (Optional)" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="user-email" placeholder="Enter email (Required)" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="user-pass" placeholder="Password (Required)" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <label for="user-captcha" id="user-captcha-label" data-value=''>Loading Captcha...</label>
+                                    <input type="text" class="form-control" id="user-captcha" placeholder="Prove you are human by answering a simple math question above">
+                                </div>
+                                <div class="checkbox">
+                                    <div>
+                                        <div class="pull-left">
+                                            <label> <input type="checkbox" checked="checked"> Remember me
+                                            </label>
+                                        </div>
+                                        <div class="pull-right">
+                                            <span id="loader-signup" class="pull-left" style="display: none;"> Creating your account, Please wait... <img src="images/loader.gif">
+                                            </span>
+                                            <button class="pull-right btn btn-primary" onclick="javascript:UI.signup();return false;">Sign up</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End signin template -->
+            <!-- Login Template -->
+            <div class="modal fade" id="login">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Log In</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" id="user-login-email" placeholder="Email" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" id="user-login-pass" placeholder="Password" required="required">
+                                </div>
+                                <div class="checkbox">
+                                    <div>
+                                        <div class="pull-left">
+                                            <label> <input type="checkbox" checked="checked"> Remember me
+                                            </label>
+                                        </div>
+                                        <div class="pull-right">
+                                            <span id="loader-login" class="pull-left" style="display: none;"> Logging in, Please wait... <img src="images/loader.gif">
+                                            </span>
+                                            <button class="pull-right btn btn-primary" onclick="javascript:UI.signin();return false;">Log In</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer" class="m-footer">
+        <div class="container">
+            <div class="pull-left left1">
+                <span>Predictions: <b id="pcount">Calculating..</b> </span> |
+                <span>Registered Users: <b id="ucount">Calculating..</b> </span> |
+                <span>Visitors: <b id="vcount">Calculating..</b> </span>
+            </div>
+            <div class="pull-right left1">
+                <span>&copy;2013 <a href="http://blog.nirav.name">Nirav Thaker</a></span>
+            </div>
+        </div>
+    </div>
+    <!--/.container-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js" async="async"></script>
+    <script src="http://twitter.github.com/typeahead.js/releases/latest/typeahead.min.js" ></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script src="js/mp.js" async="async"></script>
+    <script>
+        function i(){
+            window.setTimeout(function() {
+                UI.init();
+            }, 5);
+        }
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-44534204-1', 'prediction-central.com');
+        ga('send', 'pageview');
+        if (window.addEventListener)
+            window.addEventListener("load", i, false);
+        else if (window.attachEvent)
+            window.attachEvent("onload", i);
+        else 
+            window.onload = i;
+        google.load('visualization', '1.0', {'packages':['corechart']});
+        google.load('visualization', '1', {'packages': ['geochart']});
+    </script>
+</body>
+</html>

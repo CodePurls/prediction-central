@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+	<changeSet id="1" author="nirav" context="dev, prod">
+		<createTable tableName="prediction" schemaName="public">
+			<column name="id" autoIncrement="true" startWith="1" type="int">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="title" type="varchar(1024)" />
+			<column name="prediction_text" type="varchar(10240)" />
+			<column name="prediction_time" type="BIGINT" />
+			<column name="location" type="varchar(512)" />
+			<column name="actor" type="varchar(128)" />
+			<column name="reason" type="varchar(1024)" />
+			<column name="tags" type="varchar(1024)" />
+			<column name="original_author" type="varchar(1024)" />
+			<column name="original_source" type="varchar(1024)" />
+			<column name="created_on" type="bigint" />
+			<column name="created_by_id" type="int" />
+			<column name="created_by" type="varchar(128)" />
+			<column name="updated_on" type="bigint" />
+			<column name="ups" type="int" defaultValue="0"/>
+			<column name="downs" type="int" defaultValue="0"/>
+		</createTable>
+
+		<createTable tableName="comment" schemaName="public">
+			<column name="id" autoIncrement="true" type="int" startWith="1" />
+			<column name="prediction_id" type="int" >
+                <constraints nullable="false" />
+            </column>
+			<column name="author" type="varchar(128)" />
+			<column name="comment" type="varchar(1024)" />
+		</createTable>
+		<addPrimaryKey columnNames="id, prediction_id" constraintName="pk_comment" tableName="comment" />
+
+        <createTable tableName="visitors" schemaName="public">
+            <column name="id" type="int">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="number" type="int" autoIncrement="true" />
+        </createTable>
+
+		<createTable tableName="users" schemaName="public">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="user_name" type="varchar(64)">
+				<constraints unique="true" uniqueConstraintName="UNIQ_USERNAME" />
+			</column>
+			<column name="full_name" type="varchar(128)" />
+			<column name="email" type="varchar(128)">
+				<constraints unique="true" uniqueConstraintName="UNIQ_USEREMAIL" />
+			</column>
+			<column name="phash" type="varchar(4096)" />
+		</createTable>
+
+        <createTable tableName="fingerprints" schemaName="public">
+            <column name="id" type="int">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="fingerprint" type="varchar(4096)" />
+            <column name="user_id" type="int">
+                <constraints foreignKeyName="fk_fingerprint_users" references="users" referencedColumnNames="id" nullable="true" />
+            </column>
+            <column name="visitor_id" type="int">
+                <constraints foreignKeyName="fk_fingerprint_visitors" references="visitors" referencedColumnNames="id" nullable="true" />
+            </column>
+        </createTable>
+
+
+		<createTable tableName="votes" schemaName="public">
+			<column name="user_id" type="int" >
+				<constraints nullable="false" foreignKeyName="fk_users" references="users" referencedColumnNames="id"/>
+			</column>
+			<column name="prediction_id" type="int" >
+				<constraints  nullable="false" foreignKeyName="fk_prediction" references="prediction" referencedColumnNames="id"/>
+			</column>
+			<column name="voted" type="boolean" >
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addPrimaryKey columnNames="user_id, prediction_id, voted" constraintName="pk_votes" tableName="votes" />
+		
+		<createTable tableName="prediction_index_status" schemaName="public">
+			<column name="prediction_id" type="int">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="indexed" type="boolean" />
+		</createTable>
+	</changeSet>
+    <changeSet id="0" author="admin">
+        <insert tableName="users">
+            <column name="user_name" value="admin" />
+            <column name="full_name" value="Administrator" />
+            <column name="email" value="admin@predictions.com" />
+            <column name="phash" value="10:a364875ba7a9977ddc35b1c564e07dd1b7ba2070401a1362:6e88987ae6181398fc5391a2473df315bc5fb08762c31256" />
+        </insert>
+    </changeSet>
+    <include file="changesets/dml.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/crawler-ddl.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/crawler-facebook-dml.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/crawler-dedup-ddl.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/crawler-googleplus-dml.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/ddl.xml" relativeToChangelogFile="true"/>
+    <include file="changesets/entity-extraction-batchedindexing-ddl.xml" relativeToChangelogFile="true"/>
+</databaseChangeLog>

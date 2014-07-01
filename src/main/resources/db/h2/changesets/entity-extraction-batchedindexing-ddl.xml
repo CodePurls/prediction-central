@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet id="6" author="nirav">
+        <dropTable tableName="prediction_index_status" />
+        <createTable tableName="prediction_index_status" schemaName="public">
+            <column name="prediction_id" type="int">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="index_status" type="char" defaultValue="W">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <createIndex tableName="prediction_index_status" indexName="IDX_P_STATUS">
+            <column name="index_status" />
+        </createIndex>
+    </changeSet>
+    <changeSet id="7" author="nirav">
+        <sql>
+            <![CDATA[
+            INSERT INTO prediction_index_status (prediction_id, index_status) SELECT id, 'U' from PREDICTION ORDER BY ID ASC
+            ]]>
+        </sql>
+    </changeSet>
+    <changeSet id="8" author="nirav">
+        <createTable tableName="webservice_call_log">
+            <column name="key" type="varchar(512)">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="value" type="varchar(5242880)" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

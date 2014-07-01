@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet id="3" author="nirav">
+        <createTable tableName="crawlerLog">
+            <column name="sourceId" type="varchar(1024)" >
+                <constraints unique="true" uniqueConstraintName="UNIQUE_SOURCE_ID"/>
+            </column>
+            <column name="crawlerId" type="char(1)" />
+            <column name="contentHash" type="varchar(1024)" />
+        </createTable>
+        <addUniqueConstraint tableName="crawlerLog" columnNames="contentHash" constraintName="UNIQUE_CONTENT" />
+    </changeSet>
+</databaseChangeLog>
